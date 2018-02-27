@@ -1,0 +1,83 @@
+﻿<Window x:Class="Dluh.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Dluh"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Aktuální">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="aktList" Grid.Column="0">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <TabControl Grid.Column="1">
+                        <TabItem Header="Nový">
+                            <Grid>
+                                <StackPanel Grid.Column="1">
+                                    <Label Content="Co?"/>
+                                    <TextBox x:Name="aktCo"/>
+                                    <Label Content="Kolik?"/>
+                                    <TextBox x:Name="aktKolik"/>
+                                    <Label Content="Kdy?"/>
+                                    <DatePicker x:Name="aktKdy"/>
+                                    <Button Content="Submit" Click="aktButton_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Stats">
+                            <StackPanel>
+
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Ty co budou">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="futList" Grid.Column="0">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <TabControl Grid.Column="1">
+                        <TabItem Header="Nový">
+                            <Grid>
+                                <StackPanel Grid.Column="1">
+                                    <Label Content="Co?"/>
+                                    <TextBox x:Name="futCo"/>
+                                    <Label Content="Kolik?"/>
+                                    <TextBox x:Name="futKolik"/>
+                                    <Button Content="Submit" Click="futButton_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Stats">
+                            <StackPanel>
+                                <Label x:Name="futTotal" Content="Petsto korun" FontWeight="Bold" FontSize="16"/>
+
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
