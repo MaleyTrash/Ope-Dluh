@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LiveCharts;
+using LiveCharts.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -44,6 +46,31 @@ namespace Dluh
                 futTotalValue += i.Price;
             }
             futTotal.Content = "Celkem: " + futTotalValue.ToString()+",-";
+            UpdateCurrentTotal();
+        }
+
+        private void UpdateCurrentTotal()
+        {
+            if (!statsDate.SelectedDate.HasValue) return;
+            int month = statsDate.SelectedDate.Value.Month;
+            int year = statsDate.SelectedDate.Value.Year;
+            List<Item> monthAll = current.Where(i => i.Date.Month.Equals(month)).ToList();
+            List<Item> yearAll = current.Where(i => i.Date.Year.Equals(year)).ToList();
+            int monthTotalValue = 0;
+            foreach (Item i in monthAll)
+            {
+                monthTotalValue += i.Price;
+            }
+            int yearTotalValue = 0;
+            int[] yearArray = Enumerable.Repeat(0, 12).ToArray();
+            foreach (Item i in yearAll)
+            {
+                yearArray[i.Date.Month - 1] += i.Price;
+                yearTotalValue += i.Price;
+            }
+            aktTotalMesic.Content = String.Format("Za měsíc ({0}): {1}", month, monthTotalValue);
+            aktTotalRok.Content = String.Format("Za rok ({0}): {1}", year, yearTotalValue);
+            UpdateGraph(year.ToString(), yearArray);
         }
 
         private void NewEntry(string name, int value, DateTime date)
@@ -88,6 +115,26 @@ namespace Dluh
                 return;
             }
             NewEntry(co, kolik, DateTime.MinValue);
+        }
+
+        private void statsDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateCurrentTotal();
+        }
+
+        public void UpdateGraph(string title ,int[] values)
+        {
+            if (values.Length != 12) return;
+            var col = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = title,
+                    Values = new ChartValues<int>(values)
+                }
+            };
+            grafSpodek.Labels = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
+            graf.Series = col;
         }
     }
 }
