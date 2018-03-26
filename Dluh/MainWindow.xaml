@@ -32,6 +32,10 @@
                                     <TextBox x:Name="aktKolik"/>
                                     <Label Content="Kdy?"/>
                                     <DatePicker x:Name="aktKdy"/>
+                                    <Label Content="Do kdy?"/>
+                                    <DatePicker x:Name="aktDoKdy"/>
+                                    <Label Content="Úrok?"/>
+                                    <TextBox x:Name="aktUrok"/>
                                     <Button Content="Submit" Click="aktButton_Click"/>
                                 </StackPanel>
                             </Grid>

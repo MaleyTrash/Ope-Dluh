@@ -46,7 +46,24 @@ namespace Dluh
                 futTotalValue += i.Price;
             }
             futTotal.Content = "Celkem: " + futTotalValue.ToString()+",-";
+            CheckValues();
             UpdateCurrentTotal();
+        }
+
+        private void CheckValues()
+        {
+            DateTime n = DateTime.Now;
+            foreach(Item i in current)
+            {
+                double xd = (((n - i.ToDate).TotalDays / 30) * ((double)i.Multiplier / 100));
+                if (DateTime.Compare(n, i.ToDate) > 0)
+                {
+                    double m = 1 + (((n - i.ToDate).TotalDays / 30) * ((double)i.Multiplier / 100));
+                    MessageBox.Show(string.Format("Dluh za {0} překročil datum splacení! Přidán {1}% úrok.", i.Name, (int)Math.Round((m-1)*100)));
+                    m *= i.Price;
+                    i.Price = (int)Math.Round(m);
+                }
+            }
         }
 
         private void UpdateCurrentTotal()
@@ -73,9 +90,9 @@ namespace Dluh
             UpdateGraph(year.ToString(), yearArray);
         }
 
-        private void NewEntry(string name, int value, DateTime date)
+        private void NewEntry(string name, int value, DateTime date, DateTime toDate, int mult)
         {
-            db.Insert<Item>(new Item() { Name = name, Price = value, Date = date });
+            db.Insert<Item>(new Item() { Name = name, Price = value, Date = date, ToDate = toDate, Multiplier = mult });
             UpdateLists();
         }
 
@@ -83,9 +100,11 @@ namespace Dluh
         {
             string co = aktCo.Text;
             int kolik;
+            int urok;
             try
             {
                 kolik = int.Parse(aktKolik.Text);
+                urok = int.Parse(aktUrok.Text);
             }
             catch
             {
@@ -97,8 +116,14 @@ namespace Dluh
                 MessageBox.Show("Co to je za datum vole??");
                 return;
             }
+            if (!aktDoKdy.SelectedDate.HasValue)
+            {
+                MessageBox.Show("Co to je za datum vole??");
+                return;
+            }
             DateTime kdy = aktKdy.SelectedDate.Value;
-            NewEntry(co, kolik, kdy);
+            DateTime doKdy = aktDoKdy.SelectedDate.Value;
+            NewEntry(co, kolik, kdy, doKdy, urok);
         }
 
         private void futButton_Click(object sender, RoutedEventArgs e)
@@ -114,7 +139,7 @@ namespace Dluh
                 MessageBox.Show("POUZE ČÍSLA !!");
                 return;
             }
-            NewEntry(co, kolik, DateTime.MinValue);
+            NewEntry(co, kolik, DateTime.MinValue, DateTime.MinValue, -1);
         }
 
         private void statsDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
